@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package common;
+
+option csharp_namespace = "Common";
+option go_package = "github.com/grpc-demo/common";
+
+// Status comum para respostas
+enum Status {
+  OK = 0;
+  ERROR = 1;
+}
+
+// Timestamp comum
+message Timestamp {
+  int64 seconds = 1;
+  int32 nanos = 2;
+}
+
+// Resposta padrão
+message Response {
+  Status status = 1;
+  string message = 2;
+  Timestamp timestamp = 3;
+}

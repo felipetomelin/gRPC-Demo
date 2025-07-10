@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # C# Greeter Service
+  csharp-service:
+    build:
+      context: ./csharp-service
+      dockerfile: Dockerfile
+    image: grpc-demo/csharp-service:latest
+    container_name: grpc-demo-csharp
+    ports:
+      - "50051:50051"
+    networks:
+      - grpc-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:50051/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  # Go Calculator Service
+  go-service:
+    build:
+      context: ./go-service
+      dockerfile: Dockerfile
+    image: grpc-demo/go-service:latest
+    container_name: grpc-demo-go
+    ports:
+      - "50052:50052"
+    networks:
+      - grpc-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "50052"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  # Python Client Service
+  python-service:
+    build:
+      context: ./python-service
+      dockerfile: Dockerfile
+    image: grpc-demo/python-service:latest
+    container_name: grpc-demo-python
+    ports:
+      - "50053:50053"
+    networks:
+      - grpc-network
+    depends_on:
+      - csharp-service
+      - go-service
+    environment:
+      - GRPC_VERBOSITY=debug
+      - GRPC_TRACE=all
+    restart: unless-stopped
+
+networks:
+  grpc-network:
+    driver: bridge
+    name: grpc-demo-network
+
+volumes:
+  proto-data:
+    driver: local

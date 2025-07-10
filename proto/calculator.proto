@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package calculator;
+
+option csharp_namespace = "CalculatorService";
+option go_package = "github.com/grpc-demo/calculator";
+
+import "common.proto";
+
+// Serviço de calculadora
+service Calculator {
+  rpc Add (CalculateRequest) returns (CalculateResponse);
+  rpc Subtract (CalculateRequest) returns (CalculateResponse);
+  rpc Multiply (CalculateRequest) returns (CalculateResponse);
+  rpc Divide (CalculateRequest) returns (CalculateResponse);
+}
+
+// Requisição de cálculo
+message CalculateRequest {
+  double a = 1;
+  double b = 2;
+  string operation = 3;
+}
+
+// Resposta de cálculo
+message CalculateResponse {
+  double result = 1;
+  common.Status status = 2;
+  string message = 3;
+}

@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package greeter;
+
+option csharp_namespace = "GreeterService";
+option go_package = "github.com/grpc-demo/greeter";
+
+import "common.proto";
+
+// Serviço de saudação
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply);
+  rpc SayHelloAgain (HelloRequest) returns (HelloReply);
+}
+
+// Requisição de saudação
+message HelloRequest {
+  string name = 1;
+  string language = 2;
+}
+
+// Resposta de saudação
+message HelloReply {
+  string message = 1;
+  common.Status status = 2;
+}
